@@ -1,0 +1,14 @@
+- name: Install pacman packages
+  hosts: all
+  tasks:
+    - name: Install keyring
+      community.general.pacman:
+        name: archlinux-keyring
+      tags:
+        - pacman
+        - keyring
+    - name: Install from packagelist.txt
+      ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/dotfiles/master/package-lists/pkglist.txt | xargs pacman -Syyu --noconfirm --needed
+      tags:
+        - pacman
+        - native-packages
