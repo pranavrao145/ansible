@@ -1,0 +1,10 @@
+- name: Personal git setup (email)
+  git_config:
+    name: user.email
+    scope: global
+    value: 56097527+pranavrao145@users.noreply.github.com
+- name: Personal git setup (name)
+  git_config:
+    name: user.name
+    scope: global
+    value: Pranav Rao

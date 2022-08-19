@@ -1,0 +1,5 @@
+- name: Clone dotfiles
+  hosts: all
+  tasks:
+    - name: Clone dotfiles from GitHub
+
