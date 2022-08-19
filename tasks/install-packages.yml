@@ -2,6 +2,7 @@
   hosts: all
   tasks:
     - name: Install keyring
+      become: yes
       community.general.pacman:
         name: archlinux-keyring
       tags:
@@ -9,6 +10,96 @@
         - keyring
     - name: Install from packagelist.txt
       ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/dotfiles/master/package-lists/pkglist.txt | xargs pacman -Syyu --noconfirm --needed
+      become: yes
       tags:
         - pacman
         - native-packages
+- name: Install paru packages
+  hosts: all
+  tasks:
+    - name: Create the `aur_builder` user
+      become: yes
+      ansible.builtin.user:
+        name: aur_builder
+        create_home: yes
+        group: wheel
+      tags:
+        - paru
+        - paru-setup
+    - name: Allow the `aur_builder` user to run `sudo pacman` without a password
+      become: yes
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers.d/11-install-aur_builder
+        line: "aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman"
+        create: yes
+        validate: "visudo -cf %s"
+      tags:
+        - paru
+        - paru-setup
+    - name: Install paru
+      become: yes
+      become_user: aur_builder
+      script: ../scripts/install-paru
+      tags:
+        - paru
+        - paru-install
+    - name: Install paru packages
+      become: yes
+      become_user: aur_builder
+      ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/dotfiles/master/package-lists/foreignpkglist.txt | xargs paru -Syyu --noconfirm --needed
+      tags:
+        - paru
+        - foreign-packages
+    - name: Delete the `aur_builder` user
+      become: yes
+      ansible.builtin.user:
+        name: aur_builder
+        state: absent
+        remove: yes
+      tags:
+        - paru
+        - paru-cleanup
+    - name: Remove home directory for user `aur_builder`
+      become: yes
+      ansible.builtin.file:
+        path: /home/aur_builder
+        state: absent
+      tags:
+        - paru
+        - paru-cleanup
+- name: Install snap packages
+  hosts: all
+  tasks:
+    - name: Probe module loop
+      become: yes
+      ansible.builtin.shell: modprobe loop
+      tags:
+        - snapd
+        - snapd-setup
+        - modprobe-loop
+    - name: Make sure snap is running (socket)
+      become: yes
+      ansible.builtin.systemd:
+        name: snapd.socket
+        state: started
+      tags:
+        - snapd
+        - snapd-setup
+    - name: Make sure snap is running (daemon)
+      become: yes
+      ansible.builtin.systemd:
+        name: snapd
+        state: started
+      tags:
+        - snapd
+        - snapd-setup
+    - name: Install Spotify and OBS Studio
+      become: yes
+      community.general.snap:
+        name:
+          - spotify
+          - obs-studio
+      tags:
+        - snapd
+        - spotify
+        - obs
