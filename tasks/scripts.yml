@@ -36,7 +36,7 @@
         state: link
       tags:
         - scripts
-        - restart-spotify
+        - sysinfo
     - name: Symlink update script to /usr/bin
       become: yes
       ansible.builtin.file:
@@ -46,6 +46,46 @@
       tags:
         - scripts
         - update
+    - name: Symlink tmux-cht script to /usr/bin
+      become: yes
+      ansible.builtin.file:
+        src: /home/cypher/Scripts/tmux/tmux-cht.sh
+        dest: /usr/bin/tmux-cht
+        state: link
+      tags:
+        - scripts
+        - tmux
+        - tmux-cht
+    - name: Symlink tmux-sessionizer script to /usr/bin
+      become: yes
+      ansible.builtin.file:
+        src: /home/cypher/Scripts/tmux/tmux-sessionizer
+        dest: /usr/bin/tmux-sessionizer
+        state: link
+      tags:
+        - scripts
+        - tmux
+        - tmux-sessionizer
+    - name: Symlink tmux-windowizer script to /usr/bin
+      become: yes
+      ansible.builtin.file:
+        src: /home/cypher/Scripts/tmux/tmux-windowizer
+        dest: /usr/bin/tmux-windowizer
+        state: link
+      tags:
+        - scripts
+        - tmux
+        - tmux-windowizer
+    - name: Symlink git switch-worktree script to /usr/bin
+      become: yes
+      ansible.builtin.file:
+        src: /home/cypher/Scripts/git/switch-worktree
+        dest: /usr/bin/switch-worktree
+        state: link
+      tags:
+        - scripts
+        - git-scripts
+        - switch-worktree
 - name: Clone necessary scripts to PATH
   hosts: all
   tasks:
