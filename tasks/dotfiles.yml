@@ -12,6 +12,14 @@
       tags:
         - dotfiles
         - dotfiles-clone
+- name: Pre-create directories to avoid fully symlinked config directories
+  hosts: all
+  tasks:
+    - name: Run config directory creation script
+      script: ../scripts/create-config-dirs
+      tags:
+        - dotfiles
+        - dotfiles-install
 - name: Install dotfiles using stow
   hosts: all
   tasks:

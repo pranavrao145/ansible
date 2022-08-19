@@ -51,13 +51,17 @@
   tasks:
     - name: Clone umpv to PATH
       become: yes
-      ansible.builtin.shell: cd /usr/bin && wget https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/umpv && chmod +x umpv
+      ansible.builtin.shell:
+        chdir: /usr/bin
+        cmd: wget https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/umpv && chmod +x umpv
       tags:
         - scripts
         - umpv
     - name: Clone mapwacom to PATH
       become: yes
-      ansible.builtin.shell: cd /usr/bin && https://gist.githubusercontent.com/tom-galvin/6c19fe907945d735c045/raw/f16fa41cac87815bdd2f7da6da302fb272c7db70/mapwacom && chmod +x /usr/bin/mapwacom
+      ansible.builtin.shell:
+        chdir: /usr/bin
+        cmd: https://gist.githubusercontent.com/tom-galvin/6c19fe907945d735c045/raw/f16fa41cac87815bdd2f7da6da302fb272c7db70/mapwacom && chmod +x /usr/bin/mapwacom
       tags:
         - x
         - scripts

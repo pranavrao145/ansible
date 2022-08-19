@@ -19,6 +19,14 @@
 - name: Set up touchpad
   hosts: all
   tasks:
+    - name: Make xorg conf directory
+      become: yes
+      ansible.builtin.file:
+        path: /etc/X11/xorg.conf.d
+        state: directory
+      tags:
+        - pacman
+        - pacman-hooks
     - name: Copy touchpad configuration file
       become: yes
       ansible.builtin.copy:

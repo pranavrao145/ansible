@@ -1,1 +1,121 @@
-# neovim
+- name: Ensure Programming directory exists
+  hosts: all
+  tasks:
+    - name: Create Programming directory if it doesn't exist
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/Programming"
+        state: directory
+      tags:
+        - development
+        - ensure-programming-dir
+- name: Install neovim
+  hosts: all
+  tasks:
+    - name: Remove neovim if it already exists
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/Programming/neovim"
+        state: absent
+      tags:
+        - development
+        - neovim
+        - neovim-clean
+    - name: Clone Neovim
+      ansible.builtin.git:
+        repo: "https://github.com/neovim/neovim.git"
+        dest: "{{ lookup('env', 'HOME') }}/Programming/neovim"
+      tags:
+        - development
+        - neovim
+        - neovim-clone
+    - name: Build neovim
+      make:
+        chdir: "{{ lookup('env', 'HOME') }}/Programming/neovim"
+        params:
+          CMAKE_BUILD_TYPE: RelWithDebInfo
+      tags:
+        - development
+        - neovim
+        - neovim-build
+    - name: Install neovim
+      become: yes
+      make:
+        chdir: "{{ lookup('env', 'HOME') }}/Programming/neovim"
+        target: install
+      tags:
+        - development
+        - neovim
+        - neovim-install
+    - name: Get packer.nvim to install plugins
+      ansible.builtin.git:
+        repo: "https://github.com/wbthomason/packer.nvim"
+        dest: "{{ lookup('env', 'HOME') }}/.local/share/nvim/site/pack/packer/start/packer.nvim"
+      tags:
+        - development
+        - neovim
+        - neovim-packer
+- name: Install required debug adapters and LSP servers
+  hosts: all
+  tasks:
+    - name: Create ~/.local/opt if it doesn't exist
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/.local/opt"
+        state: directory
+      tags:
+        - development
+        - debug-lsp
+        - ensure-local-opt-dir
+    - name: Install vscode-lldb
+      ansible.builtin.shell:
+        chdir: "{{ lookup('env', 'HOME') }}/.local/opt"
+        cmd: wget -O codelldb.zip https://github.com/vadimcn/vscode-lldb/releases/latest/download/codelldb-x86_64-linux.vsix && unzip codelldb.zip "extension/*" && mv extension codelldb
+      tags:
+        - development
+        - debug-lsp
+        - vscode-lldb
+    - name: Install java-debug
+      ansible.builtin.shell:
+        chdir: "{{ lookup('env', 'HOME') }}/.local/opt"
+        cmd: git clone https://github.com/microsoft/java-debug.git && cd java-debug && chmod +x mvnw && sed -i '/ExecutionEnvironment/d' com.microsoft.java.debug.plugin/META-INF/MANIFEST.MF && ./mvnw clean install
+      tags:
+        - development
+        - debug-lsp
+        - java-debug
+    - name: Install jdtls-launcher
+      ansible.builtin.shell:
+        chdir: "{{ lookup('env', 'HOME') }}/.local/opt"
+        cmd: curl https://raw.githubusercontent.com/eruizc-dev/jdtls-launcher/master/install.sh | bash
+      tags:
+        - development
+        - debug-lsp
+        - jdtls-launcher
+    - name: Install vscode-java-test
+      ansible.builtin.git:
+        repo: "https://github.com/microsoft/vscode-java-test.git"
+        dest: "{{ lookup('env', 'HOME') }}/.local/opt/vscode-java-test"
+        recursive: yes
+        update: yes
+        accept_hostkey: yes
+        version: main
+      tags:
+        - development
+        - debug-lsp
+        - vscode-java-test
+    - name: Install omnisharp language server
+      ansible.builtin.shell:
+        chdir: "{{ lookup('env', 'HOME') }}/.local/opt"
+        cmd: mkdir omnisharp && wget https://github.com/OmniSharp/omnisharp-roslyn/releases/latest/download/omnisharp-linux-x86.zip && unzip -d omnisharp omnisharp-linux-x86.zip && chmod +x ./omnisharp/run
+      tags:
+        - development
+        - debug-lsp
+        - omnisharp
+    - name: Clean up original cloned zip files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - codelldb.zip
+        - omnisharp-linux-x86.zip
+      tags:
+        - development
+        - debug-lsp
+        - debug-lsp-cleanup
