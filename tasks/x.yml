@@ -1,0 +1,29 @@
+- name: Set up lightdm
+  hosts: all
+  tasks:
+    - name: Install lightdm config
+      become: yes
+      ansible.builtin.shell: "cp -r {{ lookup('env', 'HOME') }}/.dotfiles/lightdm/lightdm/* /etc/lightdm/"
+      tags:
+        - lightdm
+        - lightdm-config
+    - name: Enable lightdm
+      become: yes
+      ansible.builtin.systemd:
+        name: lightdm
+        enabled: yes
+      tags:
+        - x
+        - lightdm
+        - lightdm-config
+- name: Set up touchpad
+  hosts: all
+  tasks:
+    - name: Copy touchpad configuration file
+      become: yes
+      ansible.builtin.copy:
+        src: "{{ lookup('env', 'HOME') }}/.dotfiles/touchpad/90-touchpad.conf"
+        dest: /etc/X11/xorg.conf.d/90-touchpad.conf
+        tags:
+          - x
+          - touchpad

@@ -37,6 +37,15 @@
       tags:
         - scripts
         - restart-spotify
+    - name: Symlink update script to /usr/bin
+      become: yes
+      ansible.builtin.file:
+        src: /home/cypher/Scripts/system/update.sh
+        dest: /usr/bin/update
+        state: link
+      tags:
+        - scripts
+        - update
 - name: Clone necessary scripts to PATH
   hosts: all
   tasks:
@@ -46,3 +55,10 @@
       tags:
         - scripts
         - umpv
+    - name: Clone mapwacom to PATH
+      become: yes
+      ansible.builtin.shell: cd /usr/bin && https://gist.githubusercontent.com/tom-galvin/6c19fe907945d735c045/raw/f16fa41cac87815bdd2f7da6da302fb272c7db70/mapwacom && chmod +x /usr/bin/mapwacom
+      tags:
+        - x
+        - scripts
+        - wacom
