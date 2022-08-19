@@ -9,7 +9,7 @@
         - pacman
         - keyring
     - name: Install from packagelist.txt
-      ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/dotfiles/master/package-lists/pkglist.txt | xargs pacman -Syyu --noconfirm --needed
+      ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/package-lists/pkglist.txt | xargs pacman -Syyu --noconfirm --needed
       become: yes
       tags:
         - pacman
@@ -46,7 +46,7 @@
     - name: Install paru packages
       become: yes
       become_user: aur_builder
-      ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/dotfiles/master/package-lists/foreignpkglist.txt | xargs paru -Syyu --noconfirm --needed
+      ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/package-lists/foreignpkglist.txt | xargs paru -Syyu --noconfirm --needed
       tags:
         - paru
         - foreign-packages

@@ -2,4 +2,21 @@
   hosts: all
   tasks:
     - name: Clone dotfiles from GitHub
-
+      ansible.builtin.git:
+        repo: "git@github.com:pranavrao145/.dotfiles.git"
+        dest: "{{ lookup('env', 'HOME') }}/.dotfiles"
+        recursive: yes
+        update: yes
+        accept_hostkey: yes
+        version: master
+      tags:
+        - dotfiles
+        - dotfiles-clone
+- name: Install dotfiles using stow
+  hosts: all
+  tasks:
+    - name: Run stow installation script
+      script: ../scripts/stow-dotfiles
+      tags:
+        - dotfiles
+        - dotfiles-install

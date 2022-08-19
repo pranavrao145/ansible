@@ -1,0 +1,50 @@
+- name: Set up oh-my-zsh
+  hosts: all
+  tasks:
+    - name: Install oh-my-zsh
+      ansible.builtin.shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+      tags:
+        - shell
+        - oh-my-zsh
+        - oh-my-zsh-install
+- name: Set up zsh plugins
+  hosts: all
+  tasks:
+    - name: Install zsh autosuggestions
+      ansible.builtin.git:
+        repo: "https://github.com/zsh-users/zsh-autosuggestions"
+        dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+        recursive: yes
+        update: yes
+        accept_hostkey: yes
+        version: master
+      tags:
+        - shell
+        - oh-my-zsh
+        - zsh-autosuggestions
+    - name: Install zsh syntax highlighting
+      ansible.builtin.git:
+        repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git"
+        dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+        recursive: yes
+        update: yes
+        accept_hostkey: yes
+        version: master
+      tags:
+        - shell
+        - oh-my-zsh
+        - zsh-syntax-highlighting
+- name: Change shell to zsh
+  hosts: all
+  become: no
+  vars:
+    the_user: "{{ ansible_user_id }}"
+  tasks:
+    - name: Change shell of user cypher to zsh
+      become: yes
+      user:
+        name: "{{ the_user }}"
+        shell: /bin/zsh
+      tags:
+        - shell
+        - zsh-default
