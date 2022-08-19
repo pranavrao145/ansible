@@ -9,7 +9,8 @@
         - pacman
         - keyring
     - name: Install from packagelist.txt
-      ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/package-lists/pkglist.txt | xargs pacman -Syyu --noconfirm --needed
+      # NOTE: run nc -p 6969 on the remote machine to see output for this command. Command fails otherwise.
+      ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/package-lists/pkglist.txt | xargs pacman -Syyu --noconfirm --needed > /dev/tcp/localhost/6969 2>&1
       become: yes
       tags:
         - pacman
@@ -43,10 +44,18 @@
       tags:
         - paru
         - paru-install
+    - name: Set default version of rust
+      become: yes
+      become_user: aur_builder
+      ansible.builtin.shell: rustup default stable
+      tags:
+        - paru
+        - rust
     - name: Install paru packages
       become: yes
       become_user: aur_builder
-      ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/package-lists/foreignpkglist.txt | xargs paru -Syyu --noconfirm --needed
+      # NOTE: run nc -p 6969 on the remote machine to see output for this command. Command fails otherwise.
+      ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/package-lists/foreignpkglist.txt | xargs paru -Syyu --noconfirm --needed > /dev/tcp/localhost/6969 2>&1
       tags:
         - paru
         - foreign-packages

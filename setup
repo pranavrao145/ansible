@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+
+######################################
+#                   _                #
+#   ___ _   _ _ __ | |__   ___ _ __  #
+#  / __| | | | '_ \| '_ \ / _ \ '__| #
+# | (__| |_| | |_) | | | |  __/ |    #
+#  \___|\__, | .__/|_| |_|\___|_|    #
+#       |___/|_|                     #
+#                                    #
+######################################
+
+# This script sets up a clean Arch Linux install to be usable with this set of
+# Ansible playbooks. This script is to be run as root.
+
+set -e # exit if there are any errors
+
+if [ "$EUID" -ne 0 ]
+  then echo "Sorry, this script must be run as root. Try again with root priveleges."
+  exit
+fi
+
+##### BASE DEPENDENCIES #####
+
+pacman -Sy --noconfirm --needed base-devel wget xdg-user-dirs openssh python # install wget and xdg-user-dirs (required for this script to run properly)
+
+##### USER SETUP #####
+
+echo "Setting up user cypher..."
+useradd -m -G wheel cypher # add cypher user
+
+echo "Please enter a password for the user cypher."
+passwd cypher # set password for cypher
+ 
+echo "User cypher set up successfully."
+
+echo "Installing sudoers and doas.conf files..."
+
+wget https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/sudo/sudoers -O /etc/sudoers
+wget https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/doas/doas.conf -O /etc/doas.conf
+
+echo "Sudoers and doas.conf files installed successfully."
+
+##### SETUP OF USER DIRS #####
+
+echo "Creating xdg user directories for user cypher..."
+
+# Set up basic user directories for user cypher (Documents, Downloads, etc.)
+
+sudo -u cypher -s << 'EOF'
+    cd
+    xdg-user-dirs-update
+EOF
+
+echo "XDG user directories for user cypher created successfully."
+
+##### SSH SETUP #####
+
+# Prompt the user to set up SSH public and private key for this box.
+
+printf "As the final step, please set up ssh using the following commands (as user cypher):\n\n"
+
+echo "ssh-keygen -b 2048"
+echo "eval \$(ssh-agent)"
+printf "ssh-add ~/.ssh/id_rsa\n\n"
+
+printf "After these steps, the box will be ready for setup using ansible via ssh.\n\n"
+
+echo "You can find the public key to add to GitHub using the command (as cypher): cat ~/.ssh/id_rsa.pub"
