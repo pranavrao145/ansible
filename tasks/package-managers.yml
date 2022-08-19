@@ -1,0 +1,25 @@
+- name: Set up pacman
+  hosts: all
+  tasks:
+    - name: Make pacman hooks directory
+      become: yes
+      ansible.builtin.file:
+        path: /etc/pacman.d/hooks
+        state: directory
+      tags:
+        - pacman
+        - pacman-hooks
+    - name: Install pacman hooks
+      become: yes
+      ansible.builtin.shell: "cp -r {{ lookup('env', 'HOME') }}/.dotfiles/pacman/hooks/* /etc/pacman.d/hooks/"
+      tags:
+        - pacman
+        - pacman-hooks
+    - name: Install pacman configuration
+      become: yes
+      ansible.builtin.copy:
+        src: "{{ lookup('env', 'HOME') }}/.dotfiles/pacman/pacman.conf"
+        dest: /etc/pacman.conf
+        tags:
+          - pacman
+          - pacman-conf
