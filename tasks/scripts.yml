@@ -1,0 +1,48 @@
+- name: Symlink necessary scripts on to PATH
+  hosts: all
+  tasks:
+    - name: Symlink color scheme script to /usr/bin
+      become: yes
+      ansible.builtin.file:
+        src: /home/cypher/Scripts/system/update_color_scheme.sh
+        dest: /usr/bin/update-color-scheme
+        state: link
+      tags:
+        - scripts
+        - color-scheme
+    - name: Symlink lock script to /usr/bin
+      become: yes
+      ansible.builtin.file:
+        src: /home/cypher/.config/i3lock/lock.sh
+        dest: /usr/bin/lock
+        state: link
+      tags:
+        - scripts
+        - lock
+    - name: Symlink restart_spotify script to /usr/bin
+      become: yes
+      ansible.builtin.file:
+        src: /home/cypher/Scripts/spotify/restart_spotify
+        dest: /usr/bin/restart_spotify
+        state: link
+      tags:
+        - scripts
+        - restart-spotify
+    - name: Symlink system info script to /usr/bin
+      become: yes
+      ansible.builtin.file:
+        src: /home/cypher/Scripts/system/sysinfo.sh
+        dest: /usr/bin/sysinfo
+        state: link
+      tags:
+        - scripts
+        - restart-spotify
+- name: Clone necessary scripts to PATH
+  hosts: all
+  tasks:
+    - name: Clone umpv to PATH
+      become: yes
+      ansible.builtin.shell: cd /usr/bin && wget https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/umpv && chmod +x umpv
+      tags:
+        - scripts
+        - umpv

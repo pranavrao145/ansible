@@ -67,6 +67,14 @@
       tags:
         - paru
         - paru-cleanup
+    - name: Remove user `aur_builder` from sudoers
+      become: yes
+      ansible.builtin.file:
+        path: /etc/sudoers.d/11-install-aur_builder
+        state: absent
+      tags:
+        - paru
+        - paru-cleanup
 - name: Install snap packages
   hosts: all
   tasks:
