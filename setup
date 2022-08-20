@@ -34,7 +34,9 @@ passwd cypher # set password for cypher
  
 echo "User cypher set up successfully."
 
-echo "Installing sudoers and doas.conf files..."
+echo "Removing previous sudoers file and installing sudoers and doas.conf files..."
+
+rm /etc/sudoers
 
 wget https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/sudo/sudoers -O /etc/sudoers
 wget https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/doas/doas.conf -O /etc/doas.conf

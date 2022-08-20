@@ -8,13 +8,14 @@
       tags:
         - pacman
         - keyring
+        - packages-primary
     - name: Install from packagelist.txt
-      # NOTE: run nc -p 6969 on the remote machine to see output for this command. Command fails otherwise.
-      ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/package-lists/pkglist.txt | xargs pacman -Syyu --noconfirm --needed > /dev/tcp/localhost/6969 2>&1
+      ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/package-lists/pkglist.txt | xargs pacman -Syyu --noconfirm --needed
       become: yes
       tags:
         - pacman
         - native-packages
+        - packages-primary
 - name: Install paru packages
   hosts: all
   tasks:
@@ -27,6 +28,7 @@
       tags:
         - paru
         - paru-setup
+        - packages-primary
     - name: Allow the `aur_builder` user to run `sudo pacman` without a password
       become: yes
       ansible.builtin.lineinfile:
@@ -37,6 +39,16 @@
       tags:
         - paru
         - paru-setup
+        - packages-primary
+    - name: Set default version of rust
+      become: yes
+      become_user: aur_builder
+      ansible.builtin.shell: rustup default stable
+      tags:
+        - paru
+        - paru-setup
+        - rust
+        - packages-primary
     - name: Install paru
       become: yes
       become_user: aur_builder
@@ -44,30 +56,27 @@
       tags:
         - paru
         - paru-install
-    - name: Set default version of rust
-      become: yes
-      become_user: aur_builder
-      ansible.builtin.shell: rustup default stable
-      tags:
-        - paru
-        - rust
+        - packages-primary
+    # NOTE: RUN THIS TASK ALONE. Run nc -p 6969 on the new machine to see output for this task. Command is guaranteed to fail.
     - name: Install paru packages
       become: yes
       become_user: aur_builder
-      # NOTE: run nc -p 6969 on the remote machine to see output for this command. Command fails otherwise.
-      ansible.builtin.shell: curl -s https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/package-lists/foreignpkglist.txt | xargs paru -Syyu --noconfirm --needed > /dev/tcp/localhost/6969 2>&1
+      ansible.builtin.shell: paru -Syyu --needed --noconfirm $(curl -s https://raw.githubusercontent.com/pranavrao145/.dotfiles/master/package-lists/foreignpkglist.txt) > /dev/tcp/localhost/6969 2>&1
       tags:
         - paru
         - foreign-packages
+        - packages-secondary
     - name: Delete the `aur_builder` user
       become: yes
       ansible.builtin.user:
         name: aur_builder
         state: absent
         remove: yes
+        force: yes
       tags:
         - paru
         - paru-cleanup
+        - packages-tertiary
     - name: Remove home directory for user `aur_builder`
       become: yes
       ansible.builtin.file:
@@ -76,6 +85,7 @@
       tags:
         - paru
         - paru-cleanup
+        - packages-tertiary
     - name: Remove user `aur_builder` from sudoers
       become: yes
       ansible.builtin.file:
@@ -84,6 +94,7 @@
       tags:
         - paru
         - paru-cleanup
+        - packages-tertiary
 - name: Install snap packages
   hosts: all
   tasks:
@@ -94,6 +105,7 @@
         - snapd
         - snapd-setup
         - modprobe-loop
+        - packages-tertiary
     - name: Make sure snap is running (socket)
       become: yes
       ansible.builtin.systemd:
@@ -102,6 +114,7 @@
       tags:
         - snapd
         - snapd-setup
+        - packages-tertiary
     - name: Make sure snap is running (daemon)
       become: yes
       ansible.builtin.systemd:
@@ -110,6 +123,7 @@
       tags:
         - snapd
         - snapd-setup
+        - packages-tertiary
     - name: Install Spotify and OBS Studio
       become: yes
       community.general.snap:
@@ -120,3 +134,4 @@
         - snapd
         - spotify
         - obs
+        - packages-tertiary

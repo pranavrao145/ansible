@@ -19,10 +19,18 @@
       script: ../scripts/create-config-dirs
       tags:
         - dotfiles
-        - dotfiles-install
+        - dotfiles-prep
 - name: Install dotfiles using stow
   hosts: all
   tasks:
+    - name: Delete ~/.zshrc if it exists
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/.zshrc"
+        state: absent
+      tags:
+        - dotfiles
+        - dotfiles-install
+        - remove-zshrc
     - name: Run stow installation script
       script: ../scripts/stow-dotfiles
       tags:

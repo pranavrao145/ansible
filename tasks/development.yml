@@ -30,8 +30,6 @@
     - name: Build neovim
       make:
         chdir: "{{ lookup('env', 'HOME') }}/Programming/neovim"
-        params:
-          CMAKE_BUILD_TYPE: RelWithDebInfo
       tags:
         - development
         - neovim
@@ -75,7 +73,7 @@
     - name: Install java-debug
       ansible.builtin.shell:
         chdir: "{{ lookup('env', 'HOME') }}/.local/opt"
-        cmd: git clone https://github.com/microsoft/java-debug.git && cd java-debug && chmod +x mvnw && sed -i '/ExecutionEnvironment/d' com.microsoft.java.debug.plugin/META-INF/MANIFEST.MF && ./mvnw clean install
+        cmd: git clone https://github.com/microsoft/java-debug.git && cd java-debug && chmod +x mvnw && ./mvnw clean install
       tags:
         - development
         - debug-lsp
@@ -109,12 +107,9 @@
         - debug-lsp
         - omnisharp
     - name: Clean up original cloned zip files
-      ansible.builtin.file:
-        path: "{{ item }}"
-        state: absent
-      with_items:
-        - codelldb.zip
-        - omnisharp-linux-x86.zip
+      ansible.builtin.shell:
+        chdir: "{{ lookup('env', 'HOME') }}/.local/opt"
+        cmd: rm -rf codelldb.zip omnisharp-linux-x86.zip
       tags:
         - development
         - debug-lsp

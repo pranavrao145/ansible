@@ -20,6 +20,6 @@
       ansible.builtin.copy:
         src: "{{ lookup('env', 'HOME') }}/.dotfiles/pacman/pacman.conf"
         dest: /etc/pacman.conf
-        tags:
-          - pacman
-          - pacman-conf
+      tags:
+        - pacman
+        - pacman-conf

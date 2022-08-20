@@ -1,9 +1,10 @@
 #!/bin/sh
 
-STOW_FOLDERS="i3,polybar,rofi,pictures,wallpapers,dunst,picom,i3lock,scripts,kitty,nvim,tmux,profile,gh-dash"
+STOW_FOLDERS="i3,polybar,rofi,pictures,wallpapers,dunst,picom,i3lock,scripts,kitty,nvim,tmux,profile,gh-dash,xmonad,qutebrowser,zsh"
 
 for folder in $(echo $STOW_FOLDERS | sed "s/,/ /g")
 do
+    cd $HOME/.dotfiles
     echo "Stowing $folder..."
     stow -D $folder
     stow $folder

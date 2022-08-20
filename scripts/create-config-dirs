@@ -1,10 +1,10 @@
 #!/bin/sh
 
-CONFIG_FOLDERS_TO_CREATE="i3,polybar,rofi,dunst,i3lock,picom,kitty,nvim,tmux,gh-dash"
+CONFIG_FOLDERS_TO_CREATE="i3,polybar,rofi,dunst,i3lock,picom,kitty,nvim,tmux,xmonad,qutebrowser,gh-dash"
 
 for folder in $(echo $CONFIG_FOLDERS_TO_CREATE | sed "s/,/ /g")
 do
     echo "Creating config directory $folder..."
-    mkdir -p $folder
+    mkdir -p "$HOME/.config/$folder"
     echo "Directory $folder created successfully."
 done
