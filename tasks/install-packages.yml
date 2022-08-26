@@ -57,7 +57,7 @@
         - paru
         - paru-install
         - packages-primary
-    # NOTE: RUN THIS TASK ALONE. Run nc -p 6969 on the new machine to see output for this task. Command is guaranteed to fail.
+      # NOTE: RUN THIS TASK ALONE OR RUN PARU SEPARATELY ON REMOTE MACHINE. If using this ansible task, run nc -p 6969 on the new machine to see output for this task. Task is guaranteed to fail because of output redirection.
     - name: Install paru packages
       become: yes
       become_user: aur_builder

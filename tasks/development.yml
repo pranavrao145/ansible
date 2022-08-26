@@ -43,14 +43,6 @@
         - development
         - neovim
         - neovim-install
-    - name: Get packer.nvim to install plugins
-      ansible.builtin.git:
-        repo: "https://github.com/wbthomason/packer.nvim"
-        dest: "{{ lookup('env', 'HOME') }}/.local/share/nvim/site/pack/packer/start/packer.nvim"
-      tags:
-        - development
-        - neovim
-        - neovim-packer
 - name: Install required debug adapters and LSP servers
   hosts: all
   tasks:
