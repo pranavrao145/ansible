@@ -1,21 +1,49 @@
-- name: Set up lightdm
+# - name: Set up lightdm
+#   hosts: all
+#   tasks:
+#     - name: Install lightdm config
+#       become: yes
+#       ansible.builtin.shell: "cp -r {{ lookup('env', 'HOME') }}/.dotfiles/lightdm/lightdm/* /etc/lightdm/"
+#       tags:
+#         - lightdm
+#         - lightdm-config
+#     - name: Enable lightdm
+#       become: yes
+#       ansible.builtin.systemd:
+#         name: lightdm
+#         enabled: yes
+#       tags:
+#         - x
+#         - lightdm
+#         - lightdm-config
+- name: Set up sddm
   hosts: all
   tasks:
-    - name: Install lightdm config
+    - name: Make sddm conf directory
       become: yes
-      ansible.builtin.shell: "cp -r {{ lookup('env', 'HOME') }}/.dotfiles/lightdm/lightdm/* /etc/lightdm/"
+      ansible.builtin.file:
+        path: /etc/sddm.conf.d
+        state: directory
       tags:
-        - lightdm
-        - lightdm-config
-    - name: Enable lightdm
+        - x
+        - sddm
+        - sddm-config
+    - name: Install sddm config
+      become: yes
+      ansible.builtin.shell: "cp -r {{ lookup('env', 'HOME') }}/.dotfiles/sddm/* /etc/sddm.conf.d/"
+      tags:
+        - x
+        - sddm
+        - sddm-config
+    - name: Enable sddm
       become: yes
       ansible.builtin.systemd:
-        name: lightdm
+        name: sddm
         enabled: yes
       tags:
         - x
-        - lightdm
-        - lightdm-config
+        - sddm
+        - sddm-config
 - name: Set up touchpad
   hosts: all
   tasks:
@@ -25,8 +53,8 @@
         path: /etc/X11/xorg.conf.d
         state: directory
       tags:
-        - pacman
-        - pacman-hooks
+        - x
+        - touchpad
     - name: Copy touchpad configuration file
       become: yes
       ansible.builtin.copy:
