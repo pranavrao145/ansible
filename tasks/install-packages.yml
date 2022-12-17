@@ -124,14 +124,12 @@
         - snapd
         - snapd-setup
         - packages-tertiary
-    - name: Install Spotify and OBS Studio
+    - name: Install OBS Studio
       become: yes
       community.general.snap:
         name:
-          - spotify
           - obs-studio
       tags:
         - snapd
-        - spotify
         - obs
         - packages-tertiary
