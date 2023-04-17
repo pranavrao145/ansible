@@ -86,6 +86,16 @@
         - scripts
         - git-scripts
         - switch-worktree
+    - name: Symlink YouTube search script to /usr/bin
+      become: yes
+      ansible.builtin.file:
+        src: /home/cypher/Scripts/misc/search_youtube
+        dest: /usr/bin/search_youtube
+        state: link
+      tags:
+        - scripts
+        - misc-scripts
+        - search-youtube
 - name: Clone necessary scripts to PATH
   hosts: all
   tasks:

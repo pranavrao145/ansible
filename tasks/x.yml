@@ -63,3 +63,38 @@
       tags:
         - x
         - touchpad
+- name: Set up JetBrains fonts
+  hosts: all
+  tasks:
+    - name: Create ~/.local/share/fonts if it doesn't exist
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/.local/share/fonts"
+        state: directory
+      tags:
+        - x
+        - jetbrains-fonts
+        - ensure-local-share-fonts
+    - name: Download JetBrains Mono Nerd Font
+      ansible.builtin.shell:
+        chdir: "{{ lookup('env', 'HOME') }}/.local/share/fonts"
+        cmd: wget -O JetBrainsMono.zip https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip && unzip JetBrainsMono.zip
+      tags:
+        - x
+        - jetbrains-fonts
+        - jetbrains-fonts-download
+    - name: Clean up original cloned zip files and unnecessary auxilliary files
+      ansible.builtin.shell:
+        chdir: "{{ lookup('env', 'HOME') }}/.local/share/fonts"
+        cmd: rm -rf JetBrainsMono.zip readme.md OFL.txt
+      tags:
+        - x
+        - jetbrains-fonts
+        - jetbrains-fonts-cleanup
+    - name: Refresh font cache
+      ansible.builtin.shell:
+        chdir: "{{ lookup('env', 'HOME') }}/.local/share/fonts"
+        cmd: fc-cache -fv
+      tags:
+        - x
+        - jetbrains-fonts
+        - jetbrains-fonts-refresh
