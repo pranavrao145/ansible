@@ -70,14 +70,6 @@
         - development
         - debug-lsp
         - java-debug
-    - name: Install jdtls-launcher
-      ansible.builtin.shell:
-        chdir: "{{ lookup('env', 'HOME') }}/.local/opt"
-        cmd: curl https://raw.githubusercontent.com/eruizc-dev/jdtls-launcher/master/install.sh | bash
-      tags:
-        - development
-        - debug-lsp
-        - jdtls-launcher
     - name: Install vscode-java-test
       ansible.builtin.git:
         repo: "https://github.com/microsoft/vscode-java-test.git"
