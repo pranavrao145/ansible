@@ -1,0 +1,17 @@
+- name: Set up Spicetify
+  hosts: all
+  tasks:
+    - name: Make Spotify modifiable
+      become: yes
+      ansible.builtin.shell: chmod a+wr /opt/spotify && sudo chmod a+wr /opt/spotify/Apps -R
+      tags:
+        - apps
+        - spicetify
+        - spotify-modifiable
+    - name: Apply Spicetify
+      become: yes
+      ansible.builtin.shell: spicetify backup apply
+      tags:
+        - apps
+        - spicetify
+        - spicetify-setup

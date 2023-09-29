@@ -96,6 +96,25 @@
         - scripts
         - misc-scripts
         - search-youtube
+    - name: Symlink reload Hyprland script to /usr/bin
+      become: yes
+      ansible.builtin.file:
+        src: /home/cypher/Scripts/hyprland/reload_hyprland
+        dest: /usr/bin/reload_hyprland
+        state: link
+      tags:
+        - scripts
+        - hyprland
+        - reload-hyprland
+    - name: Symlink laptop keybinds script to /usr/bin
+      become: yes
+      ansible.builtin.file:
+        src: /home/cypher/Scripts/system/set_laptop_keybinds.sh
+        dest: /usr/bin/set_laptop_keybinds
+        state: link
+      tags:
+        - scripts
+        - set-laptop-keybinds
 - name: Clone necessary scripts to PATH
   hosts: all
   tasks:

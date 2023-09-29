@@ -98,3 +98,12 @@
         - x
         - jetbrains-fonts
         - jetbrains-fonts-refresh
+- name: Set up Hyprland
+  hosts: all
+  tasks:
+    - name: Set up Hyprland auto-login
+      become: yes
+      ansible.builtin.shell: cp /home/cypher/Scripts/hyprland/skip-username.conf /etc/systemd/system/getty@tty1.service.d/
+      tags:
+        - hyprland
+        - hyprland-autologin

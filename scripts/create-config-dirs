@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CONFIG_FOLDERS_TO_CREATE="i3,polybar,rofi,dunst,i3lock,picom,kitty,nvim,tmux,xmonad,qutebrowser,gh-dash"
+CONFIG_FOLDERS_TO_CREATE="i3,polybar,rofi,dunst,i3lock,picom,kitty,nvim,tmux,xmonad,qutebrowser,gh-dash,hypr,ranger"
 
 for folder in $(echo $CONFIG_FOLDERS_TO_CREATE | sed "s/,/ /g")
 do

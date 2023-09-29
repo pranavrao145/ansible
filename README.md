@@ -15,13 +15,8 @@ Below is a possible execution order of these playbooks for everything to work pr
 - Scripts
 - X
 - Development
+- Apps
 
-## TODO
-
-A note to myself for the things I am yet to include in these playbooks:
-
-- Firefox userChrome setup
-- Spicetify set up
-- TTY Auto Username (cd /etc/systemd/system/getty@tty1.service.d/skip-username.conf)
-- ZProfile
-- Reload Hyprland Script
+## Un-Automatable
+The following setup tasks must be done manually because there is no way to automate them:
+- Firefox userChrome setup (copy from dotfiles and put in the appropriate profile directory)

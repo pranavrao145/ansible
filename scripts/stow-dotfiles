@@ -1,6 +1,6 @@
 #!/bin/sh
 
-STOW_FOLDERS="i3,polybar,rofi,pictures,wallpapers,dunst,picom,i3lock,scripts,kitty,nvim,tmux,profile,gh-dash,xmonad,qutebrowser,zsh,zathura"
+STOW_FOLDERS="i3,polybar,rofi,pictures,wallpapers,dunst,picom,i3lock,scripts,kitty,nvim,tmux,profile,gh-dash,ripgrep,spicetify,wal,xmonad,qutebrowser,zsh,zathura,profile,hyprland"
 
 for folder in $(echo $STOW_FOLDERS | sed "s/,/ /g")
 do
