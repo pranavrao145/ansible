@@ -36,7 +36,7 @@
         - zsh-syntax-highlighting
     - name: Install zsh-nvm
       ansible.builtin.git:
-        repo: "https://github.com/lukechilds/zsh-nvm "
+        repo: "https://github.com/lukechilds/zsh-nvm"
         dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/custom/plugins/zsh-nvm"
         recursive: yes
         update: yes
